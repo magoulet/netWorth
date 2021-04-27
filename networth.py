@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pandas as pd
-import plotly.express as px
 import chart_studio
 import chart_studio.plotly as py
+import os
+import pandas as pd
+import plotly.express as px
+import yaml
 
-username = 'magoulet' # your username
-api_key = 'BwgUtD4nmlTdxmP6M27k' # your api key - go to profile > settings > regenerate key
+conf = yaml.load(open('config.yaml'),Loader=yaml.FullLoader)
+
+username = conf['username']
+api_key = conf['plotlyApiKey']
+input_file = conf['inputFile']
+
 chart_studio.tools.set_credentials_file(username=username, api_key=api_key)
 
 
-df = pd.read_csv('NetWorth.csv', 
+df = pd.read_csv(input_file, 
                  parse_dates = ['Date'], 
                  index_col='Date')
 
