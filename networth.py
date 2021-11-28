@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from fbprophet import Prophet
+from prophet import Prophet
 import datetime as dt
 import matplotlib.pyplot as plt
 import pandas as pd
-# import yaml
 from dbconnect import connection
 
 plt.style.use('ggplot')
@@ -13,7 +12,7 @@ plt.style.use('ggplot')
 
 def getData():
     cur, conn = connection("portfolio")
-    resultValue = cur.execute("SELECT * FROM networth")
+    resultValue = cur.execute("SELECT * FROM networth WHERE date > (DATE_SUB(CURDATE(), INTERVAL 2 YEAR))")
     if resultValue > 0:
         data = cur.fetchall()
         df = pd.DataFrame(data)
@@ -69,10 +68,10 @@ if __name__ == '__main__':
     df['date'] = df['date'].astype('datetime64[ns]')
     df['netWorth'] = df['netWorth'].astype('float')
 
-    # plt.figure(figsize=(8, 4))
-    # plt.grid(linestyle='-.')
-    # plt.plot(df['date'], df['netWorth'])
-    # plt.show(block=False)
+    plt.figure(figsize=(8, 4))
+    plt.grid(linestyle='-.')
+    plt.plot(df['date'], df['netWorth'])
+    plt.show(block=False)
 
     forecast = predict(df)
 
